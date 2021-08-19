@@ -1,35 +1,35 @@
 from django.db import models
-import datetime
+from django.utils import timezone
 
 # Create your models here.
+class Pelaajat(models.Model):
+    pelaaja_id = models.AutoField(primary_key=True)
+    pelaaja_nimi = models.CharField(max_length=15)
+    saadut_sakot = models.PositiveSmallIntegerField()
+    maksetut_sakot = models.PositiveSmallIntegerField()
+    jäljellä_sakot = models.PositiveSmallIntegerField()
+
+    @property
+    def left():
+        jäljellä_sakot = saadut_sakot - maksetut_sakot
+        return jäljellä_sakot
+    
+class Kulut(models.Model):
+    kulu_id = models.AutoField(primary_key=True)
+    kulu_pvm = models.DateField(default=timezone.now)
+    kulu_selite = models.CharField(max_length=50)
+    kulu_summa = models.PositiveSmallIntegerField()
+
+class Rikkeet(models.Model):
+    rike_id = models.AutoField(primary_key=True)
+    rike_kuvaus = models.CharField(max_length=50)
+    rike_summa = models.PositiveSmallIntegerField()
+
 class Sakko(models.Model):
-    PELAAJA = (
-        (32,'Aksu'),
-        (18,'Hoppe'),
-        (101,'Jone'),
-    )
-
-    RIKE = (
-        (1,'1. CT Unohdus - 5€'),
-        (2,'2. Varusteen unohdus - 5€'), 
-        (3,'3. Jäähy 2min - 2€'),
-        (4,'4. Jäähy 5min - 5€'),
-        (5,'5. Muu sakko - 5€'),
-        (6,'6. Myöhästyminen - 5€'),
-        (7,'7. Väärä varuste - 5€'),
-        (8,'8. ISO Muu sakko - 10€'), 
-    )
-
-    KERROIN = (
-        (1,'x1'),
-        (2,'x2'),
-        (3,'x3'),
-        (4,'x4'),
-        (5,'x5')
-        )
-
-    pelaaja =models.PositiveSmallIntegerField(max_length=3, choices=PELAAJA, on_delete=models.CASCADE)
-    rike =models.PositiveSmallIntegerField(max_lenght=1, choices=RIKE)
-    pvm =models.DateField(default=datetime.date.today())
-    kerroin =models.PositiveSmallIntegerField(max_length=1, choices=KERROIN)
-    selite =models.CharField(max_length=100)
+    sakko_pelaaja = models.ForeignKey('Pelaajat', on_delete=models.DO_NOTHING, default=0)
+    rike = models.ForeignKey('Rikkeet', on_delete=models.DO_NOTHING, default=0)
+    pvm = models.DateField(default=timezone.now)
+    sakko_selite = models.CharField(max_length=100)
+    sakko_summa = models.PositiveSmallIntegerField(default=0)
+    tuplasakko = models.BooleanField(default=0)
+    
