@@ -12,4 +12,15 @@ def maksu(response):
     return HttpResponse("<h1>Lisää maksu<h1/>")
 
 def kulu(response):
-    return HttpResponse("<h1>Lisää kulu<h1/>")            
+    return HttpResponse("<h1>Lisää kulu<h1/>")
+
+def kassa(response):
+    return HttpResponse("<h1>Kassa<h1/>")
+
+def maksamatta(response):
+    return HttpResponse("<h1>Maksamattomat sakot<h1/>")
+
+def sakot(response):
+    return HttpResponse("<h1>Kaikki sakot<h1/>")        
+
+

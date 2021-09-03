@@ -22,6 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-8z70fiq7)=#d^fnls45=hm#)cx)*mlk!k%^*@7zpy5x%vwsldf'
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -104,9 +105,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fi-fi'
 
-TIME_ZONE = 'FI'
+TIME_ZONE = 'Europe/Helsinki'
 
 USE_I18N = True
 
