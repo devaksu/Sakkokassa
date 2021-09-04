@@ -31,11 +31,11 @@ class Rikkeet(models.Model):
 
 
 class Sakko(models.Model):
-    sakotettu = models.ForeignKey(Pelaajat, on_delete=models.DO_NOTHING, default=0)
+    pelaaja_id = models.ForeignKey(Pelaajat, on_delete=models.DO_NOTHING, default=0)
     rike_id = models.ForeignKey(Rikkeet, on_delete=models.DO_NOTHING, default=0)
     pvm = models.DateField(default=timezone.now)
     sakko_selite = models.CharField(max_length=100)
     sakko_summa = models.PositiveSmallIntegerField(default=0)
     tuplasakko = models.BooleanField(default=0)
-    DisplayFields=['sakotettu','rike_id', 'pvm', 'sakko_selite', 'sakko_summa', 'tuplasakko']
+    DisplayFields=['pelaaja_id','rike_id', 'pvm', 'sakko_selite', 'sakko_summa', 'tuplasakko']
     
