@@ -1,5 +1,4 @@
 from django.urls import path
-
 from . import views
 
 urlpatterns = [
@@ -9,5 +8,5 @@ urlpatterns = [
     path("kulu/", views.kulu, name="kulu"),
     path("kassa/", views.kassa, name="kassa"),
     path("maksamatta/", views.maksamatta, name="maksamatta"),
-    path("sakot/", views.sakot, name="sakot"),
+    path("tapahtumat/", views.tapahtumat, name="tapahtumat"),
 ]

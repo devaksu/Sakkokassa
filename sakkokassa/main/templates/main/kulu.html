@@ -1,0 +1,11 @@
+{% extends 'main/base.html' %}
+{% block title %} Lisää uusi kulu {% endblock %}
+
+{% block content %}
+<h1>Lisää uusi kulu</h1>
+<form method="post" action="/kulu/">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit", name="save">Lisää kulu!</button>
+    </form>
+{% endblock %}

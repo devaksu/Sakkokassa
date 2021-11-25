@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+{% block title %} Tapahtumat {% endblock %}
+
+{% block content %}
+    <h1>Sakot</h1>
+
+    <h1>Maksut</h1>
+
+    <h1>Kulut {{kulut.summa}}</h1>  
+        <ul>{% for kulu in kulut %}
+            <li>{{kulu.kulu_pvm}} {{kulu.kulu_summa}}€ {{kulu.kulu_selite}}</li>
+        {% endfor %}</ul>
+{% endblock %}
+
