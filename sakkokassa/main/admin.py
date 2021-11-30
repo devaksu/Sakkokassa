@@ -19,4 +19,8 @@ class SakkoAdmin(admin.ModelAdmin):
 
 @admin.register(Rikkeet)
 class RikkeetAdmin(admin.ModelAdmin):
-    list_display=Rikkeet.DisplayFields        
+    list_display=Rikkeet.DisplayFields
+
+@admin.register(Maksu)
+class MaksuAdmin(admin.ModelAdmin):
+    list_display=Maksu.DisplayFields            

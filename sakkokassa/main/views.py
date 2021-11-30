@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from .models import Pelaajat, Kulut, Maksu, Rikkeet, Sakko
+from .models import Pelaajat, Kulut, Maksu, Sakko
 from .forms import MaksuForm, SakkoForm, KuluForm
-
-# Create your views here
+from django.db.models import Sum, F
 
 def sakko(response):
     if response.method == "POST":
@@ -15,13 +13,18 @@ def sakko(response):
             s = form.cleaned_data["sakko_selite"]
             d = form.cleaned_data["pvm"]
             a = form.cleaned_data["sakko_summa"]
-            sakko = Sakko(  pelaaja_id=p,
+            sakko = Sakko( pelaaja_id=p,
                             rike_id=r,
                             sakko_selite=s,
                             pvm=d,
                             sakko_summa=a
                         )
             sakko.save()
+
+            sakko_update = Pelaajat.objects.get(pelaaja_nimi=p)
+            sakko_update.saadut_sakot += a
+            sakko_update.save(update_fields = ["saadut_sakot"])
+            
             return redirect('/sakko')
 
     else:
@@ -64,6 +67,11 @@ def maksu(response):
                             maksu_summa=s
                         )
             maksu.save()
+
+            maksu_update = Pelaajat.objects.get(pelaaja_nimi=p)
+            maksu_update.maksetut_sakot += s
+            maksu_update.save(update_fields = ['maksetut_sakot'])
+
             return redirect('/maksu')
 
     else:
@@ -74,15 +82,22 @@ def maksu(response):
 
 def tapahtumat(response):
     kulut = Kulut.objects.all()
-    return render(response, "main/tapahtumat.html", {"kulut":kulut}) 
+    sakko = Sakko.objects.all()
+    sakko = sakko.order_by('pelaaja_id')
+    maksu = Maksu.objects.all()
+    saadut = Pelaajat.objects.aggregate(sum=Sum('saadut_sakot'))
+    maksetut = Pelaajat.objects.aggregate(sum=Sum('maksetut_sakot'))
+    kulutettu = Kulut.objects.aggregate(sum=Sum('kulu_summa'))
+    return render(response, "main/tapahtumat.html", 
+                {"kulut":kulut, "sakot":sakko, "maksut":maksu, "saadut":saadut, "maksetut":maksetut, "kulutettu":kulutettu}) 
+
+
+def maksamatta(response):
+    pelaaja = Pelaajat.objects.all()
+    maksamatta = Pelaajat.objects.annotate(maksamatta_sakot=F('saadut_sakot')-F('maksetut_sakot')).aggregate(sum=Sum('maksamatta_sakot'))
+
+    return render(response, "main/maksamatta.html", { "pelaaja":pelaaja, "maksamatta":maksamatta,})
+
 
 def index(response):
     return render(response, "main/home.html", {})
-
-def kassa(response):
-    return render(response, "main/base.html", {})
-
-def maksamatta(response):
-    return render(response, "main/base.html", {})
-
-

@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %}
+{% block title %} Maksamatta {% endblock %}
+
+{% block content %}
+<h1>Maksamatta {{maksamatta.sum}}€</h1>
+    <table> 
+        <tr>
+            <th> Sakotettu</th>
+            <th> Maksettavaa</th>
+        </tr>
+    
+            {% for p in pelaaja %}
+                {% if p.maksamatta_sakot != 0 %}
+                <tr>    
+                    <td> {{p.pelaaja_nimi}}&ensp;</td>
+                    <td> {{p.maksamatta_sakot}}€&ensp;</td>
+                {% endif %}    
+            {% endfor %}
+                </tr>        
+    </table> 
+                       
+{% endblock %}

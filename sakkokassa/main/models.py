@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from django.db.models import Sum
 
 # Create your models here.
 class Pelaajat(models.Model):
@@ -29,6 +28,7 @@ class Kulut(models.Model):
     def __str__(self):
         return self.kulu_selite
 
+
 class Rikkeet(models.Model):
     rike_id = models.PositiveSmallIntegerField(primary_key=True)
     rike_kuvaus = models.CharField(max_length=50)
@@ -51,3 +51,4 @@ class Maksu(models.Model):
     pelaaja_id = models.ForeignKey(Pelaajat, on_delete=models.DO_NOTHING, default=0)
     pvm = models.DateField()
     maksu_summa = models.PositiveSmallIntegerField()
+    DisplayFields=['pelaaja_id','pvm','maksu_summa']

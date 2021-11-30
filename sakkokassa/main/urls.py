@@ -6,7 +6,6 @@ urlpatterns = [
     path("sakko/", views.sakko, name="sakko"),
     path("maksu/", views.maksu, name="maksu"),
     path("kulu/", views.kulu, name="kulu"),
-    path("kassa/", views.kassa, name="kassa"),
     path("maksamatta/", views.maksamatta, name="maksamatta"),
     path("tapahtumat/", views.tapahtumat, name="tapahtumat"),
 ]

@@ -2,13 +2,60 @@
 {% block title %} Tapahtumat {% endblock %}
 
 {% block content %}
-    <h1>Sakot</h1>
 
-    <h1>Maksut</h1>
+    <h1>Sakot {{ saadut.sum }}€</h1>
+    <table> 
+        <tr>
+            <th> Sakotettu</th>
+            <th> Rike</th>
+            <th> Päivämäärä</th>
+            <th> Selite</th>
+            <th> Summa</th>
+        </tr>
+    
+    {% for sakko in sakot %}
+        <tr>
+            <td> {{sakko.pelaaja_id}}&ensp;</td>
+            <td> {{sakko.rike_id}}&ensp;</td>
+            <td> {{sakko.pvm}}&ensp;</td>
+            <td> {{sakko.sakko_selite}}&ensp;</td>
+            <td> {{sakko.sakko_summa}}€&ensp;</td>
+        </tr>
+    {% endfor %}
+    </table>
 
-    <h1>Kulut {{kulut.summa}}</h1>  
-        <ul>{% for kulu in kulut %}
-            <li>{{kulu.kulu_pvm}} {{kulu.kulu_summa}}€ {{kulu.kulu_selite}}</li>
-        {% endfor %}</ul>
+    <h1>Maksut {{ maksetut.sum }}€</h1>
+    <table> 
+        <tr>
+            <th> Maksaja</th>
+            <th> Päivämäärä</th>
+            <th> Summa</th>
+        </tr>
+        {% for maksu in maksut %}
+        <tr>
+            <td> {{maksu.pelaaja_id}}&ensp;</td>
+            <td> {{maksu.pvm}}&ensp;</td>
+            <td> {{maksu.maksu_summa}}€&ensp;</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <h1>Kulut {{kulutettu.sum}}€</h1>  
+        <table>
+            <tr>
+                <th> Päivämäärä</th>
+                <th> Summa</th>
+                <th> Selite</th>
+            </tr>
+            
+            {% for kulu in kulut %}
+            <tr>
+                <td>{{kulu.kulu_pvm}}&ensp;</td>
+                <td>{{kulu.kulu_summa}}€&emsp;</td>  
+                <td>{{kulu.kulu_selite}}</td>
+            </tr>
+        {% endfor %}
+        </table>
+
 {% endblock %}
 
