@@ -1,0 +1,37 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<h1>Kirjaudu</h1>
+<br></br>
+
+<form action="" method=POST>
+  {% csrf_token %}
+    
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>   
+    {% endfor %}
+  {% endif %}
+    
+  <form>
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Käyttäjänimi</label>
+          <input type="text" class="form-control" name="username" aria-describedby="emailHelp">
+        </div>
+
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Salasana</label>
+          <input type="password" class="form-control" name="password">
+        </div> 
+        
+        <div class="d-grid gap-2">
+          <input type ="submit" value="Kirjaudu" button class="btn btn-primary" type="button">
+        </div>
+        
+    </form>
+
+{% endblock %}
+

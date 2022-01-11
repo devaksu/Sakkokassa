@@ -1,61 +1,81 @@
 {% extends 'main/base.html' %}
-{% block title %} Tapahtumat {% endblock %}
 
 {% block content %}
+{% if user.is_authenticated %}
 
     <h1>Sakot {{ saadut.sum }}€</h1>
-    <table> 
-        <tr>
-            <th> Sakotettu</th>
-            <th> Rike</th>
-            <th> Päivämäärä</th>
-            <th> Selite</th>
-            <th> Summa</th>
-        </tr>
+    <table class="table">
+        <thead> 
+            <tr>
+                <th scope= "col"> Sakotettu</th>
+                <th scope= "col"> Rike</th>
+                <th scope= "col"> Päivämäärä</th>
+                <th scope= "col"> Selite</th>
+                <th scope= "col"> Summa</th>
+            </tr>
+        </thead>
     
+        <tbody>
     {% for sakko in sakot %}
         <tr>
-            <td> {{sakko.pelaaja_id}}&ensp;</td>
-            <td> {{sakko.rike_id}}&ensp;</td>
-            <td> {{sakko.pvm}}&ensp;</td>
-            <td> {{sakko.sakko_selite}}&ensp;</td>
-            <td> {{sakko.sakko_summa}}€&ensp;</td>
+            <td scope="row">{{sakko.pelaaja_id}}&ensp; &ensp;</td>
+            <td scope="row"> {{sakko.rike_id}}&ensp; &ensp;</td>
+            <td scope="row"> {{sakko.pvm}}&ensp; &ensp;</td>
+            <td scope="row"> {{sakko.sakko_selite}}&ensp; &ensp;</td>
+            <td scope="row"> {{sakko.sakko_summa}}€&ensp; &ensp;</td>
         </tr>
-    {% endfor %}
-    </table>
+        
+        {% endfor %}
+        </tbody>
 
+    </table>
+<br>
     <h1>Maksut {{ maksetut.sum }}€</h1>
-    <table> 
+    <table class="table">
+        <thead> 
         <tr>
-            <th> Maksaja</th>
-            <th> Päivämäärä</th>
-            <th> Summa</th>
+            <th scope= "col"> Maksaja</th>
+            <th scope= "col"> Päivämäärä</th>
+            <th scope= "col"> Summa</th>
         </tr>
+        </thead>
+        
+        <tbody>
         {% for maksu in maksut %}
         <tr>
-            <td> {{maksu.pelaaja_id}}&ensp;</td>
-            <td> {{maksu.pvm}}&ensp;</td>
-            <td> {{maksu.maksu_summa}}€&ensp;</td>
-        </tr>
-    {% endfor %}
-    </table>
+            <td scope="row"> {{maksu.pelaaja_id}}&ensp; &ensp;</td>
+            <td scope="row"> {{maksu.pvm}}&ensp; &ensp;</td>
+            <td scope="row"> {{maksu.maksu_summa}}€&ensp; &ensp;</td>
+        </tr>  
+        {% endfor %}
+        </tbody>
 
+    </table>
+<br>
     <h1>Kulut {{kulutettu.sum}}€</h1>  
-        <table>
+        <table class ="table">
+            <thead>
             <tr>
-                <th> Päivämäärä</th>
-                <th> Summa</th>
-                <th> Selite</th>
+                <th scope= "col"> Päivämäärä</th>
+                <th scope= "col"> Summa</th>
+                <th scope= "col"> Selite</th>
             </tr>
-            
+            </thead>
+
+            <tbody>
             {% for kulu in kulut %}
             <tr>
-                <td>{{kulu.kulu_pvm}}&ensp;</td>
-                <td>{{kulu.kulu_summa}}€&emsp;</td>  
-                <td>{{kulu.kulu_selite}}</td>
+                <td scope="row">{{kulu.kulu_pvm}}&ensp; &ensp;</td>
+                <td scope="row">{{kulu.kulu_summa}}€&emsp; &ensp;</td>  
+                <td scope="row">{{kulu.kulu_selite}}</td>
             </tr>
-        {% endfor %}
+            {% endfor %}
+            </tbody>
         </table>
+<br>
 
+{% else %}
+<h1><center>Please <a href={% url 'login_user' %}>Log in</a></center></h1>
+{% endif %}
 {% endblock %}
 

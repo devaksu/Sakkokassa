@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Pelaajat, Kulut, Maksu, Sakko
 from .forms import MaksuForm, SakkoForm, KuluForm
 from django.db.models import Sum, F
+from django.contrib import messages
 
 def sakko(response):
     if response.method == "POST":
@@ -20,6 +21,7 @@ def sakko(response):
                             sakko_summa=a
                         )
             sakko.save()
+            messages.success(response, ("Sakko lisätty!"))
 
             sakko_update = Pelaajat.objects.get(pelaaja_nimi=p)
             sakko_update.saadut_sakot += a
@@ -46,6 +48,7 @@ def kulu(response):
                             kulu_summa=a
                         )
             kulu.save()
+            messages.success(response, ("Kulu lisätty!"))
             return redirect('/kulu')
         
     else:
@@ -67,6 +70,7 @@ def maksu(response):
                             maksu_summa=s
                         )
             maksu.save()
+            messages.success(response, ("Maksu lisätty!"))
 
             maksu_update = Pelaajat.objects.get(pelaaja_nimi=p)
             maksu_update.maksetut_sakot += s
@@ -98,6 +102,10 @@ def maksamatta(response):
 
     return render(response, "main/maksamatta.html", { "pelaaja":pelaaja, "maksamatta":maksamatta,})
 
-
 def index(response):
-    return render(response, "main/home.html", {})
+    saadut = Pelaajat.objects.aggregate(sum=Sum('saadut_sakot'))
+    kulutettu = Kulut.objects.aggregate(sum=Sum('kulu_summa'))
+    maksamatta = Pelaajat.objects.annotate(maksamatta_sakot=F('saadut_sakot')-F('maksetut_sakot')).aggregate(sum=Sum('maksamatta_sakot'))
+    kassa = saadut['sum']-maksamatta['sum']-kulutettu['sum']
+
+    return render(response, "main/index.html", {"saadut":saadut, "kulutettu":kulutettu, "maksamatta":maksamatta,"kassa":kassa})

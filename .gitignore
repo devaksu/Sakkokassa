@@ -1,4 +1,5 @@
 # Ignore time keeping
 Tuntikirjanpito.xlsx
 sakot.txt
-secret.py
+secret.txt
+sakkokassa/db.sqlite3
