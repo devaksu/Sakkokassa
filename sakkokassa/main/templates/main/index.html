@@ -1,14 +1,30 @@
 {% extends 'main/base.html' %}
 
-
 <body>
 {% block content %}
     {% if user.is_authenticated %}
-        <h1><center>Kirstu</center></h1>
-        <h3><center>+ Annetut sakot &ensp; {{ saadut.sum }} €</center></h3>
-        <h3><center>- Maksamatta &ensp;{{maksamatta.sum}} €</center></h3>
-        <h3><center>- Käytetty &ensp; &ensp; &ensp;{{ kulutettu.sum }} €</center></h3>
-        <h2><center>= KASSA &ensp; &ensp; &ensp;{{ kassa }} €</center></h2>
+        
+        <table class="table">
+            <thead><center><h1>Kirstu: {{ kassa }} €</h1></center></thead>
+            <tbody>
+                <tr>
+                    <td>+ Annetut sakot</td>
+                    <td>{{ saadut.sum }} €</td>
+                </tr>
+
+                <tr>
+                    <td>- Maksamatta</td>
+                    <td>{{maksamatta.sum}} €</td>
+                </tr>
+                
+                <tr>
+                    <td>- Käytetty</td>
+                    <td>{{ kulutettu.sum }} €</td>
+                </tr> 
+                               
+            </tbody> 
+
+        </table>
 
     {% else %}
         <h1><center>Please <a href={% url 'login_user' %}>Log in</a></center></h1>

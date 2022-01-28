@@ -1,0 +1,3 @@
+*.sqlite3
+sakkokassa/requirements.txt
+sakkokassa/secret.txt
