@@ -1,2 +1,4 @@
 .env
-app/main/static
+*.jpg
+*.svg
+*.ico
