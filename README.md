@@ -21,4 +21,8 @@ VIRTUAL_HOST=<YOUR_DOMAIN>
 VIRTUAL_PORT=8000  
 LETSENCRYPT_HOST=<YOUR_DOMAIN>  
 
-**4. Fill credentials for superuser account (username & password)**    
+**4. Run up.sh**  
+
+**5. Fill credentials for superuser account (username & password)**  
+
+**6. Run down.sh to remove all containers**  
