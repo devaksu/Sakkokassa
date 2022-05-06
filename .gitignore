@@ -1,5 +1,2 @@
 .env
-db.sqlite3
-.jpg
-.svg
-.ico
+app/main/static
