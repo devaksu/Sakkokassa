@@ -1,0 +1,32 @@
+{% extends 'main/base.html' %}
+
+<body>
+{% block content %}
+    {% if user.is_authenticated %}
+        
+        <table class="table">
+            <thead><center><h1>Kirstu: {{ kassa }} €</h1></center></thead>
+            <tbody>
+                <tr>
+                    <td>+ Annetut sakot</td>
+                    <td>{{ saadut.sum }} €</td>
+                </tr>
+
+                <tr>
+                    <td>- Maksamatta</td>
+                    <td>{{maksamatta.sum}} €</td>
+                </tr>
+                
+                <tr>
+                    <td>- Käytetty</td>
+                    <td>{{ kulutettu.sum }} €</td>
+                </tr> 
+                               
+            </tbody> 
+
+        </table>
+
+    {% endif %}    
+{% endblock %}
+    
+</body>

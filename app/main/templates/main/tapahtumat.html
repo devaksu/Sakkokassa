@@ -1,0 +1,79 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+    <h1>Sakot {{ saadut.sum }}€</h1>
+    <table class="table">
+        <thead> 
+            <tr>
+                <th scope= "col"> Saaja</th>
+                <th scope= "col"> Rike</th>
+                <th scope= "col"> Pvm</th>
+                <th scope= "col"> Selite</th>
+                <th scope= "col"> Summa</th>
+            </tr>
+        </thead>
+    
+        <tbody>
+    {% for sakko in sakot %}
+        <tr>
+            <td scope="row">{{sakko.pelaaja_id}}&ensp; &ensp;</td>
+            <td scope="row"> {{sakko.rike_id}}&ensp; &ensp;</td>
+            <td scope="row"> {{sakko.pvm}}&ensp; &ensp;</td>
+            <td scope="row"> {{sakko.sakko_selite}}&ensp; &ensp;</td>
+            <td scope="row"> {{sakko.sakko_summa}}€&ensp; &ensp;</td>
+        </tr>
+        
+        {% endfor %}
+        </tbody>
+
+    </table>
+<br>
+    <h1>Maksut {{ maksetut.sum }}€</h1>
+    <table class="table">
+        <thead> 
+        <tr>
+            <th scope= "col"> Maksaja</th>
+            <th scope= "col"> Pvm</th>
+            <th scope= "col"> Summa</th>
+        </tr>
+        </thead>
+        
+        <tbody>
+        {% for maksu in maksut %}
+        <tr>
+            <td scope="row"> {{maksu.pelaaja_id}}&ensp; &ensp;</td>
+            <td scope="row"> {{maksu.pvm}}&ensp; &ensp;</td>
+            <td scope="row"> {{maksu.maksu_summa}}€&ensp; &ensp;</td>
+        </tr>  
+        {% endfor %}
+        </tbody>
+
+    </table>
+<br>
+    <h1>Kulut {{kulutettu.sum}}€</h1>  
+        <table class ="table">
+            <thead>
+            <tr>
+                <th scope= "col"> Selite</th>
+                <th scope= "col"> Pvm</th>
+                <th scope= "col"> Summa</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for kulu in kulut %}
+            <tr>
+                <td scope="row">{{kulu.kulu_selite}}</td>
+                <td scope="row">{{kulu.kulu_pvm}}&ensp; &ensp;</td>
+                <td scope="row">{{kulu.kulu_summa}}€&emsp; &ensp;</td>  
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+<br>
+
+{% endif %}
+{% endblock %}
+

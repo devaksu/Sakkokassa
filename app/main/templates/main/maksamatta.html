@@ -1,0 +1,28 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+<h1>Maksamatta {{maksamatta.sum}}€</h1>
+    <table class ="table"> 
+        <thead>
+        <tr>
+            <th scope= "col"> Sakotettu</th>
+            <th scope= "col"> Maksettavaa</th>
+        </tr>
+        </thead>
+        
+        <tbody>
+            {% for p in pelaaja %}
+                {% if p.maksamatta_sakot != 0 %}
+                <tr>    
+                    <td scope="row"> {{p.pelaaja_nimi}}&ensp;</td>
+                    <td scope="row"> {{p.maksamatta_sakot}}€&ensp;</td>
+                {% endif %}    
+            {% endfor %}
+                </tr>
+        </tbody>        
+    </table> 
+
+{% endif %}                       
+{% endblock %}
