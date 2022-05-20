@@ -35,7 +35,7 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #060625;";>
+        <nav class="navbar sticky-top navbar-expand-md navbar-dark" style="background-color: #060625;";>
             <div class="container">
                 {% if user.is_authenticated %}
                 <a href="/" class="navbar-brand">Beeceen Sakkokassa</a>
@@ -88,7 +88,7 @@
     
         <div class= "container">
             <br>
-            <div class="p-4 mb-2 bg-light text-dark" style="--bs-bg-opacity: .5;">
+            <div class="p-4 mb-2 bg-light text-dark" style="--bs-bg-opacity: .6;">
                 {% block content %}
                 {% endblock %}
             </div>

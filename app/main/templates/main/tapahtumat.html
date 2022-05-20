@@ -18,11 +18,11 @@
         <tbody>
     {% for sakko in sakot %}
         <tr>
-            <td scope="row">{{sakko.pelaaja_id}}&ensp; &ensp;</td>
-            <td scope="row"> {{sakko.rike_id}}&ensp; &ensp;</td>
-            <td scope="row"> {{sakko.pvm}}&ensp; &ensp;</td>
-            <td scope="row"> {{sakko.sakko_selite}}&ensp; &ensp;</td>
-            <td scope="row"> {{sakko.sakko_summa}}€&ensp; &ensp;</td>
+            <td scope="row">{{sakko.pelaaja_id}}</td>
+            <td scope="row"> {{sakko.rike_id}}</td>
+            <td scope="row"> {{sakko.pvm|date: 'j. M -y'}}</td>
+            <td scope="row"> {{sakko.sakko_selite}}</td>
+            <td scope="row"> {{sakko.sakko_summa}}€</td>
         </tr>
         
         {% endfor %}
@@ -44,7 +44,7 @@
         {% for maksu in maksut %}
         <tr>
             <td scope="row"> {{maksu.pelaaja_id}}&ensp; &ensp;</td>
-            <td scope="row"> {{maksu.pvm}}&ensp; &ensp;</td>
+            <td scope="row"> {{maksu.pvm|date: 'j. M -y'}}&ensp; &ensp;</td>
             <td scope="row"> {{maksu.maksu_summa}}€&ensp; &ensp;</td>
         </tr>  
         {% endfor %}
@@ -66,7 +66,7 @@
             {% for kulu in kulut %}
             <tr>
                 <td scope="row">{{kulu.kulu_selite}}</td>
-                <td scope="row">{{kulu.kulu_pvm}}&ensp; &ensp;</td>
+                <td scope="row">{{kulu.kulu_pvm|date: 'j. M -y'}}&ensp; &ensp;</td>
                 <td scope="row">{{kulu.kulu_summa}}€&emsp; &ensp;</td>  
             </tr>
             {% endfor %}

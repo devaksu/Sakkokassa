@@ -1,4 +1,4 @@
-FROM  python:3.9.6-bullseye
+FROM  python:3.10-bullseye
 
 ENV PYTHONDONTWRITEBYTECODE=1  
 ENV PYTHONUNBUFFERED=1
@@ -11,5 +11,4 @@ WORKDIR $APP_HOME
 
 COPY . .
 
-RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
