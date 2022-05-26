@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
-# Create your models here.
 class Pelaajat(models.Model):
+    """ Joukkueen jäsenet ja yhteenveto heidän sakoista ja maksuista """
     pelaaja_id = models.PositiveSmallIntegerField(primary_key=True)
     pelaaja_nimi = models.CharField(max_length=15)
     saadut_sakot = models.PositiveSmallIntegerField(default=0)
@@ -19,6 +19,7 @@ class Pelaajat(models.Model):
     
 
 class Kulut(models.Model):
+    """ Sakkokassasta maksetut kulut ja niiden tiedot """
     kulu_id = models.AutoField(primary_key=True)
     kulu_pvm = models.DateField()
     kulu_selite = models.CharField(max_length=50, blank=True)
@@ -30,6 +31,7 @@ class Kulut(models.Model):
 
 
 class Rikkeet(models.Model):
+    """ Sakkokassan säännöt """
     rike_id = models.PositiveSmallIntegerField(primary_key=True)
     rike_kuvaus = models.CharField(max_length=50)
     DisplayFields=['rike_id', 'rike_kuvaus',]
@@ -39,6 +41,7 @@ class Rikkeet(models.Model):
 
 
 class Sakko(models.Model):
+    """ Sakkokassaan kirjatut rikkeet ja niistä tuomitut rangaistukset """
     pelaaja_id = models.ForeignKey(Pelaajat, on_delete=models.DO_NOTHING, default=0)
     rike_id = models.ForeignKey(Rikkeet, on_delete=models.DO_NOTHING, default=0)
     pvm = models.DateField()
@@ -48,6 +51,7 @@ class Sakko(models.Model):
     
 
 class Maksu(models.Model):
+    """ Pelaajien sakkokassaan tekemät maksut """
     pelaaja_id = models.ForeignKey(Pelaajat, on_delete=models.DO_NOTHING, default=0)
     pvm = models.DateField()
     maksu_summa = models.PositiveSmallIntegerField(default=0)

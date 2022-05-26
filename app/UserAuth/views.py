@@ -4,6 +4,7 @@ from django.contrib import messages
 
 
 def login_user(request):
+    """ Käyttäjän sisäänkirjaus """
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
@@ -20,6 +21,7 @@ def login_user(request):
         return render(request, 'authenticate/login_user.html', {})
 
 def logout_user(request):
+    """ Käyttäjän uloskirjaus järjestelmästä """
     logout(request)
     messages.success(request, ("Uloskirjautuminen onnistui!"))
     return redirect('login_user')

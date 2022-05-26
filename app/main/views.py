@@ -7,26 +7,27 @@ from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='/UserAuth/login_user')
 def sakko(response):
+    """ Funktiolla lisätään pelaajalle sakko """
     if response.method == "POST":
         form = SakkoForm(response.POST)
     
         if form.is_valid():
-            p = form.cleaned_data["pelaaja_id"]
-            r = form.cleaned_data["rike_id"]
-            s = form.cleaned_data["sakko_selite"]
-            d = form.cleaned_data["pvm"]
-            a = form.cleaned_data["sakko_summa"]
-            sakko = Sakko( pelaaja_id=p,
-                            rike_id=r,
-                            sakko_selite=s,
-                            pvm=d,
-                            sakko_summa=a
+            pelaaja = form.cleaned_data["pelaaja_id"]
+            rike = form.cleaned_data["rike_id"]
+            selite = form.cleaned_data["sakko_selite"]
+            date = form.cleaned_data["pvm"]
+            summa = form.cleaned_data["sakko_summa"]
+            sakko = Sakko( pelaaja_id=pelaaja,
+                            rike_id=rike,
+                            sakko_selite=selite,
+                            pvm=date,
+                            sakko_summa=summa
                         )
             sakko.save()
             messages.success(response, ("Sakko lisätty!"))
 
-            sakko_update = Pelaajat.objects.get(pelaaja_nimi=p)
-            sakko_update.saadut_sakot += a
+            sakko_update = Pelaajat.objects.get(pelaaja_nimi=pelaaja)
+            sakko_update.saadut_sakot += summa
             sakko_update.save(update_fields = ["saadut_sakot"])
             
             return redirect('/sakko')
@@ -38,16 +39,17 @@ def sakko(response):
 
 @login_required(login_url='/UserAuth/login_user')
 def kulu(response):
+    """ Funktiolla lisätään kassasta maksettuja kuluja """
     if response.method == "POST":
         form = KuluForm(response.POST)
 
         if form.is_valid():
-            a = form.cleaned_data["kulu_summa"]
-            s = form.cleaned_data["kulu_selite"]
-            d = form.cleaned_data["pvm"]
-            kulu = Kulut(   kulu_pvm=d,
-                            kulu_selite=s,
-                            kulu_summa=a
+            summa = form.cleaned_data["kulu_summa"]
+            selite = form.cleaned_data["kulu_selite"]
+            date = form.cleaned_data["pvm"]
+            kulu = Kulut(   kulu_pvm=date,
+                            kulu_selite=selite,
+                            kulu_summa=summa
                         )
             kulu.save()
             messages.success(response, ("Kulu lisätty!"))
@@ -60,22 +62,23 @@ def kulu(response):
 
 @login_required(login_url='/UserAuth/login_user')
 def maksu(response):
+    """ Funktiolla kuitataan pelaajan maksaneen sakkoja kassaan """
     if response.method == "POST":
         form = MaksuForm(response.POST)
 
         if form.is_valid():
-            p = form.cleaned_data["pelaaja"]
-            d = form.cleaned_data["pvm"]
-            s = form.cleaned_data["summa"]
-            maksu = Maksu(  pelaaja_id=p,
-                            pvm=d,
-                            maksu_summa=s
+            pelaaja = form.cleaned_data["pelaaja"]
+            date = form.cleaned_data["pvm"]
+            summa = form.cleaned_data["summa"]
+            maksu = Maksu(  pelaaja_id=pelaaja,
+                            pvm=date,
+                            maksu_summa=summa
                         )
             maksu.save()
             messages.success(response, ("Maksu lisätty!"))
 
-            maksu_update = Pelaajat.objects.get(pelaaja_nimi=p)
-            maksu_update.maksetut_sakot += s
+            maksu_update = Pelaajat.objects.get(pelaaja_nimi=pelaaja)
+            maksu_update.maksetut_sakot += summa
             maksu_update.save(update_fields = ['maksetut_sakot'])
 
             return redirect('/maksu')
@@ -86,12 +89,27 @@ def maksu(response):
     return render(response, "main/maksu.html", {"form":form})
 
 @login_required(login_url='/UserAuth/login_user')
-def tapahtumat(response):
+def tapahtumat(request):
+    """ Funktiolla kerätään kaikki sakkokassan tapahtumat yhdelle sivulle """
+
+    # Poista sakko
+    if request.method == "POST":
+        poistettava_id = request.POST.get("sakko-id")
+        poistettava = Sakko.objects.filter(id=poistettava_id).first()
+        if sakko:
+            pelaaja = poistettava.pelaaja_id
+            summa = poistettava.sakko_summa
+            print(pelaaja,summa)
+            poistettava.delete()
+            sakko_update = Pelaajat.objects.get(pelaaja_nimi=pelaaja)
+            sakko_update.saadut_sakot -= summa
+            sakko_update.save(update_fields = ["saadut_sakot"])
+    
     kulut = Kulut.objects.all()
-    sakko = Sakko.objects.all()
-    sakko = sakko.order_by('pelaaja_id')
+    sakot = Sakko.objects.all().order_by('pvm')
     maksu = Maksu.objects.all()
 
+    # Huomioidaan if-lauseella mikäli tietokannassa ei ole tietoja 
     saadut = Pelaajat.objects.aggregate(sum=Sum('saadut_sakot'))
     if saadut['sum'] is None:
         saadut['sum'] = 0
@@ -104,11 +122,13 @@ def tapahtumat(response):
     if kulutettu['sum'] is None:
         kulutettu['sum'] = 0
     
-    return render(response, "main/tapahtumat.html", 
-                {"kulut":kulut, "sakot":sakko, "maksut":maksu, "saadut":saadut, "maksetut":maksetut, "kulutettu":kulutettu}) 
+    return render(request, "main/tapahtumat.html", 
+                {"kulut":kulut, "sakot":sakot, "maksut":maksu, "saadut":saadut, "maksetut":maksetut, "kulutettu":kulutettu}) 
 
 @login_required(login_url='/UserAuth/login_user')
 def maksamatta(response):
+    """ Kerätään kaikki maksamattomat sakot pelaajakohtaisesti """
+    
     pelaaja = Pelaajat.objects.all()
     
     maksamatta = Pelaajat.objects.annotate(maksamatta_sakot=F('saadut_sakot')-F('maksetut_sakot')).aggregate(sum=Sum('maksamatta_sakot'))
@@ -119,6 +139,8 @@ def maksamatta(response):
 
 @login_required(login_url='/UserAuth/login_user')
 def index(response):
+    """ Etusivu näyttää yhteenvedon kassan sen hetkisestä tilanteesta """
+
     saadut = Pelaajat.objects.aggregate(sum=Sum('saadut_sakot'))
     if saadut['sum'] is None:
         saadut['sum'] = 0
@@ -128,9 +150,16 @@ def index(response):
         kulutettu['sum'] = 0
     
     maksamatta = Pelaajat.objects.annotate(maksamatta_sakot=F('saadut_sakot')-F('maksetut_sakot')).aggregate(sum=Sum('maksamatta_sakot'))
+    
     if maksamatta['sum'] is None:
         maksamatta['sum'] = 0
 
     kassa = saadut['sum'] - maksamatta['sum'] - kulutettu['sum']
     
-    return render(response, "main/index.html", {"saadut":saadut, "kulutettu":kulutettu, "maksamatta":maksamatta,"kassa":kassa})
+    return render(response, "main/index.html", {
+                            "saadut":saadut, 
+                            "kulutettu":kulutettu, 
+                            "maksamatta":maksamatta,
+                            "kassa":kassa
+                            }
+                        )
