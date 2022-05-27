@@ -18,7 +18,7 @@
         <tbody>
     {% for sakko in sakot %}
         <tr>
-            <td scope="row"> {{sakko.pvm|date: 'd.m.y'}}</td>
+            <td scope="row"> {{sakko.pvm|date:'d.m.y'}}</td>
             <td scope="row"> {{sakko.pelaaja_id}}</td>
             <td scope="row"> {{sakko.rike_id}}</td>
             <td scope="row"> {{sakko.sakko_summa}}€</td>
@@ -46,8 +46,8 @@
     <table class="table">
         <thead> 
         <tr>
-            <th scope= "col"> Maksaja</th>
             <th scope= "col"> Pvm</th>
+            <th scope= "col"> Maksaja</th>
             <th scope= "col"> Summa</th>
         </tr>
         </thead>
@@ -55,8 +55,8 @@
         <tbody>
         {% for maksu in maksut %}
         <tr>
+            <td scope="row"> {{maksu.pvm|date:'d.m.y'}}</td>
             <td scope="row"> {{maksu.pelaaja_id}}</td>
-            <td scope="row"> {{maksu.pvm|date: 'd.m.y'}}</td>
             <td scope="row"> {{maksu.maksu_summa}}€</td>
         </tr>  
         {% endfor %}
@@ -68,8 +68,8 @@
         <table class ="table">
             <thead>
             <tr>
-                <th scope= "col"> Selite</th>
                 <th scope= "col"> Pvm</th>
+                <th scope= "col"> Selite</th>
                 <th scope= "col"> Summa</th>
             </tr>
             </thead>
@@ -77,8 +77,8 @@
             <tbody>
             {% for kulu in kulut %}
             <tr>
+                <td scope="row">{{kulu.kulu_pvm|date:'d.m.y'}}</td>
                 <td scope="row">{{kulu.kulu_selite}}</td>
-                <td scope="row">{{kulu.kulu_pvm|date: 'd.m.y'}}</td>
                 <td scope="row">{{kulu.kulu_summa}}€</td>  
             </tr>
             {% endfor %}

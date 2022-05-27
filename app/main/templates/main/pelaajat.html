@@ -1,0 +1,33 @@
+{% extends 'main/base.html' %}
+
+
+{% block content %}
+
+    <h1>Pelaajakohtaiset sakot</h1>
+
+    <div class="accordion" id="accordionExample">
+        {% for p in pelaaja %}
+            {% if p.saadut_sakot != 0 %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{p.pelaaja_id}}">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{p.pelaaja_id}}" aria-expanded="false" aria-controls="collapse{{p.pelaaja_id}}">
+                            <b>{{p.saadut_sakot}}€</b>    {{p.pelaaja_nimi}}
+                        </button>
+                    </h2>
+                    <div id="collapse{{p.pelaaja_id}}" class="accordion-collapse collapse" aria-labelledby="heading{{p.pelaaja_id}}" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                                {% for sakko in sakot %}
+                                    {% if sakko.pelaaja_id == p.pelaaja_id %}
+                                        <ul style="list-style-type:none;">
+                                            <li>{{sakko.pvm|date:'d.m.y'}} | {{sakko.sakko_summa}}€ | {{sakko.rike_id__rike_kuvaus}} | {{sakko.sakko_selite}}</li>
+                                        </ul>
+                                    {% endif %}
+                                {% endfor %} 
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+      </div>
+  
+{% endblock %}

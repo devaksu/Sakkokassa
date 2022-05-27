@@ -5,6 +5,35 @@ from django.db.models import Sum, F
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
+
+@login_required(login_url='/UserAuth/login_user')
+def index(response):
+    """ Etusivu näyttää yhteenvedon kassan sen hetkisestä tilanteesta """
+
+    saadut = Pelaajat.objects.aggregate(sum=Sum('saadut_sakot'))
+    if saadut['sum'] is None:
+        saadut['sum'] = 0
+    
+    kulutettu = Kulut.objects.aggregate(sum=Sum('kulu_summa'))
+    if kulutettu['sum'] is None:
+        kulutettu['sum'] = 0
+    
+    maksamatta = Pelaajat.objects.annotate(maksamatta_sakot=F('saadut_sakot')-F('maksetut_sakot')).aggregate(sum=Sum('maksamatta_sakot'))
+    
+    if maksamatta['sum'] is None:
+        maksamatta['sum'] = 0
+
+    kassa = saadut['sum'] - maksamatta['sum'] - kulutettu['sum']
+    
+    return render(response, "main/index.html", {
+                            "saadut":saadut, 
+                            "kulutettu":kulutettu, 
+                            "maksamatta":maksamatta,
+                            "kassa":kassa
+                            }
+                        )
+
+
 @login_required(login_url='/UserAuth/login_user')
 def sakko(response):
     """ Funktiolla lisätään pelaajalle sakko """
@@ -67,7 +96,7 @@ def maksu(response):
         form = MaksuForm(response.POST)
 
         if form.is_valid():
-            pelaaja = form.cleaned_data["pelaaja"]
+            pelaaja = form.cleaned_data["pelaaja_id"]
             date = form.cleaned_data["pvm"]
             summa = form.cleaned_data["summa"]
             maksu = Maksu(  pelaaja_id=pelaaja,
@@ -96,7 +125,7 @@ def tapahtumat(request):
     if request.method == "POST":
         poistettava_id = request.POST.get("sakko-id")
         poistettava = Sakko.objects.filter(id=poistettava_id).first()
-        if sakko:
+        if poistettava:
             pelaaja = poistettava.pelaaja_id
             summa = poistettava.sakko_summa
             print(pelaaja,summa)
@@ -123,7 +152,12 @@ def tapahtumat(request):
         kulutettu['sum'] = 0
     
     return render(request, "main/tapahtumat.html", 
-                {"kulut":kulut, "sakot":sakot, "maksut":maksu, "saadut":saadut, "maksetut":maksetut, "kulutettu":kulutettu}) 
+                {"kulut":kulut, 
+                "sakot":sakot, 
+                "maksut":maksu, 
+                "saadut":saadut, 
+                "maksetut":maksetut, 
+                "kulutettu":kulutettu}) 
 
 @login_required(login_url='/UserAuth/login_user')
 def maksamatta(response):
@@ -132,34 +166,14 @@ def maksamatta(response):
     pelaaja = Pelaajat.objects.all()
     
     maksamatta = Pelaajat.objects.annotate(maksamatta_sakot=F('saadut_sakot')-F('maksetut_sakot')).aggregate(sum=Sum('maksamatta_sakot'))
-    if maksamatta is None:
-        maksamatta = 0
+    if maksamatta['sum'] is None:
+        maksamatta['sum'] = 0
     
     return render(response, "main/maksamatta.html", { "pelaaja":pelaaja, "maksamatta":maksamatta,})
 
+
 @login_required(login_url='/UserAuth/login_user')
-def index(response):
-    """ Etusivu näyttää yhteenvedon kassan sen hetkisestä tilanteesta """
-
-    saadut = Pelaajat.objects.aggregate(sum=Sum('saadut_sakot'))
-    if saadut['sum'] is None:
-        saadut['sum'] = 0
-    
-    kulutettu = Kulut.objects.aggregate(sum=Sum('kulu_summa'))
-    if kulutettu['sum'] is None:
-        kulutettu['sum'] = 0
-    
-    maksamatta = Pelaajat.objects.annotate(maksamatta_sakot=F('saadut_sakot')-F('maksetut_sakot')).aggregate(sum=Sum('maksamatta_sakot'))
-    
-    if maksamatta['sum'] is None:
-        maksamatta['sum'] = 0
-
-    kassa = saadut['sum'] - maksamatta['sum'] - kulutettu['sum']
-    
-    return render(response, "main/index.html", {
-                            "saadut":saadut, 
-                            "kulutettu":kulutettu, 
-                            "maksamatta":maksamatta,
-                            "kassa":kassa
-                            }
-                        )
+def pelaajat(response):
+    pelaaja = Pelaajat.objects.values("pelaaja_id", "saadut_sakot", "pelaaja_nimi")
+    sakot = Sakko.objects.values("pelaaja_id", "rike_id__rike_kuvaus", "pvm","sakko_selite", "sakko_summa")
+    return render(response, "main/pelaajat.html", { "pelaaja":pelaaja, "sakot":sakot})
