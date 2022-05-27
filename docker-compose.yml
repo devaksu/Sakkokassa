@@ -6,7 +6,7 @@ services:
     build: ./app
     command: gunicorn sakkokassa.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - db:/home/app
+      - db:/home/app/web/DB
       - static_volume:/home/app/web/staticfiles
     expose:
       - 8000
