@@ -24,7 +24,7 @@ class KuluForm(forms.Form):
 
 class MaksuForm(forms.Form):
     """ Lomake, jolla syötetään maksu järjestelmään """
-    pelaaja_id = forms.ModelChoiceField(queryset=Pelaajat.objects.order_by("pelaaja_id"), label="Nimi:", required=True, widget=forms.Select(attrs={'class':'form-control'}))
+    pelaaja_id = forms.ModelChoiceField(queryset=Pelaajat.objects.order_by("pelaaja_nimi"), label="Nimi:", required=True, widget=forms.Select(attrs={'class':'form-control'}))
     pvm = forms.DateField(initial=datetime.date.today,label="Päivämäärä:", widget=forms.DateInput(attrs={'class':'form-control'}))
     summa = forms.IntegerField(initial=15, required=True,label="Summa:",min_value=1, widget=forms.NumberInput(attrs={'class':'form-control'}))
 

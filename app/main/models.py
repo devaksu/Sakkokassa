@@ -4,7 +4,7 @@ from django.utils import timezone
 class Pelaajat(models.Model):
     """ Joukkueen jäsenet ja yhteenveto heidän sakoista ja maksuista """
     pelaaja_id = models.PositiveSmallIntegerField(primary_key=True)
-    pelaaja_nimi = models.CharField(max_length=15)
+    pelaaja_nimi = models.CharField(max_length=25)
     saadut_sakot = models.PositiveSmallIntegerField(default=0)
     maksetut_sakot = models.PositiveSmallIntegerField(default=0)
     DisplayFields = ['pelaaja_id', 'pelaaja_nimi', 'saadut_sakot', 'maksetut_sakot', 'maksamatta_sakot']
