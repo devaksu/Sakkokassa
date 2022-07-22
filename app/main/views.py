@@ -135,7 +135,7 @@ def tapahtumat(request):
             sakko_update.save(update_fields = ["saadut_sakot"])
     
     kulut = Kulut.objects.all()
-    sakot = Sakko.objects.all().order_by('pvm')
+    sakot = Sakko.objects.all().order_by('-pvm')
     maksu = Maksu.objects.all()
 
     # Huomioidaan if-lauseella mikäli tietokannassa ei ole tietoja 

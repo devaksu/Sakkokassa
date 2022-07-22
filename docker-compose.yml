@@ -2,7 +2,7 @@ version: '3'
 services:
   web:
     container_name: django
-    #restart: unless-stopped
+    restart: always
     build: ./app
     command: gunicorn sakkokassa.wsgi:application --bind 0.0.0.0:8000
     volumes:
@@ -15,7 +15,7 @@ services:
  
   nginx-proxy:
     container_name: nginx-proxy
-    #restart: unless-stopped
+    restart: always
     build: ./nginx
     ports:
       - 80:80
@@ -31,7 +31,7 @@ services:
 
   nginx-proxy-letsencrypt:
     container_name: letsencrypt
-    #restart: unless-stopped
+    restart: always
     image: jrcs/letsencrypt-nginx-proxy-companion
     env_file:
       - ./.env
