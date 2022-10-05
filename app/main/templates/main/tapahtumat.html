@@ -1,91 +1,129 @@
 {% extends 'main/base.html' %}
-
 {% block content %}
 {% if user.is_authenticated %}
 
-    <h1>Sakot {{ saadut.sum }}€</h1>
-    <table class="table">
-        <thead> 
-            <tr>
-                <th scope= "col"> Pvm</th>
-                <th scope= "col"> Saaja</th>
-                <th scope= "col"> Rike</th>
-                <th scope= "col"> Summa</th>
-                <th scope= "col"> Selite</th>
-            </tr>
-        </thead>
+<div class="accordion" id="accordionTapahtumat">
+    <div class="accordion-sakot">
+        <h1 class= "header-sakot" id="heading-Sakot">
+            <button class="accordion-button"
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#collapseOne" 
+                    aria-expanded="false" 
+                    ria-controls="collapseOne">
+                    <h2>Sakot {{ saadut.sum }}€</h2>
+            </button>
+        </h1>
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="heading-Sakot" data-bs-parent="#accordionTapahtumat">
+            <div class="accordion-body-sakot">
+                <table class="table">
+                    <thead> 
+                        <tr>
+                            <th scope= "col"> Pvm</th>
+                            <th scope= "col"> Saaja</th>
+                            <th scope= "col"> Rike</th>
+                            <th scope= "col"> Summa</th>
+                            <th scope= "col"> Selite</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sakko in sakot %}
+                            <tr>
+                                <td scope="row"> {{sakko.pvm|date:'d.m.y'}}</td>
+                                <td scope="row"> {{sakko.pelaaja_id}}</td>
+                                <td scope="row"> {{sakko.rike_id}}</td>
+                                <td scope="row"> {{sakko.sakko_summa}}€</td>
+                                <td scope="row"> {{sakko.sakko_selite}}</td>
+                                <td scope="row"> 
+                                    <form method ="post">
+                                        {% csrf_token %}
+                                        <button 
+                                            type="submit" 
+                                            class="btn-close" 
+                                            name="sakko-id" 
+                                            value="{{sakko.id}}"
+                                            ></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-maksut">
+        <h1 class= "header-maksut" id="heading-maksut">
+            <button class="accordion-button"
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#collapseTwo" 
+                    aria-expanded="false" 
+                    ria-controls="collapseTwo">
+                    <h2>Maksut {{ maksetut.sum }}€</h2>
+            </button>
+        </h1>
+        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="heading-maksut" data-bs-parent="#accordionTapahtumat">
+            <div class="accordion-body-maksut">
+                <table class="table">
+                    <thead> 
+                    <tr>
+                        <th scope= "col"> Pvm</th>
+                        <th scope= "col"> Maksaja</th>
+                        <th scope= "col"> Summa</th>
+                    </tr>
+                </thead>
+                    
+                <tbody>
+                    {% for maksu in maksut %}
+                    <tr>
+                        <td scope="row"> {{maksu.pvm|date:'d.m.y'}}</td>
+                        <td scope="row"> {{maksu.pelaaja_id}}</td>
+                        <td scope="row"> {{maksu.maksu_summa}}€</td>
+                    </tr>  
+                    {% endfor %}
+                </tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+
+    <div class="accordion-kulut">
+        <h1 class= "header-kulut" id="heading-kulut">
+            <button class="accordion-button"
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#collapseThree" 
+                    aria-expanded="false" 
+                    ria-controls="collapseThree">
+                    <h2>Kulut {{kulutettu.sum}}€</h2> 
+            </button>
+        </h1>
+        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="heading-kulut" data-bs-parent="#accordionTapahtumat">
+            <div class="accordion-body-kulut">
+                <table class ="table">
+                    <thead>
+                        <tr>
+                            <th scope= "col"> Pvm</th>
+                            <th scope= "col"> Selite</th>
+                            <th scope= "col"> Summa</th>
+                        </tr>
+                        </thead>
     
-        <tbody>
-    {% for sakko in sakot %}
-        <tr>
-            <td scope="row"> {{sakko.pvm|date:'d.m.y'}}</td>
-            <td scope="row"> {{sakko.pelaaja_id}}</td>
-            <td scope="row"> {{sakko.rike_id}}</td>
-            <td scope="row"> {{sakko.sakko_summa}}€</td>
-            <td scope="row"> {{sakko.sakko_selite}}</td>
-            <td scope="row"> 
-                <form method ="post">
-                    {% csrf_token %}
-                    <button 
-                        type="submit" 
-                        class="btn-close" 
-                        name="sakko-id" 
-                        value="{{sakko.id}}"
-                        ></button>
-                </form>
-            </td>
-
-        </tr>
-        
-        {% endfor %}
-        </tbody>
-
-    </table>
-<br>
-    <h1>Maksut {{ maksetut.sum }}€</h1>
-    <table class="table">
-        <thead> 
-        <tr>
-            <th scope= "col"> Pvm</th>
-            <th scope= "col"> Maksaja</th>
-            <th scope= "col"> Summa</th>
-        </tr>
-        </thead>
-        
-        <tbody>
-        {% for maksu in maksut %}
-        <tr>
-            <td scope="row"> {{maksu.pvm|date:'d.m.y'}}</td>
-            <td scope="row"> {{maksu.pelaaja_id}}</td>
-            <td scope="row"> {{maksu.maksu_summa}}€</td>
-        </tr>  
-        {% endfor %}
-        </tbody>
-
-    </table>
-<br>
-    <h1>Kulut {{kulutettu.sum}}€</h1>  
-        <table class ="table">
-            <thead>
-            <tr>
-                <th scope= "col"> Pvm</th>
-                <th scope= "col"> Selite</th>
-                <th scope= "col"> Summa</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            {% for kulu in kulut %}
-            <tr>
-                <td scope="row">{{kulu.kulu_pvm|date:'d.m.y'}}</td>
-                <td scope="row">{{kulu.kulu_selite}}</td>
-                <td scope="row">{{kulu.kulu_summa}}€</td>  
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-<br>
-
+                    <tbody>
+                        {% for kulu in kulut %}
+                        <tr>
+                            <td scope="row">{{kulu.kulu_pvm|date:'d.m.y'}}</td>
+                            <td scope="row">{{kulu.kulu_selite}}</td>
+                            <td scope="row">{{kulu.kulu_summa}}€</td>  
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table> 
+            </div>
+        </div>
+    </div>
+</div>
 {% endif %}
 {% endblock %}
-

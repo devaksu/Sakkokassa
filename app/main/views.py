@@ -128,15 +128,14 @@ def tapahtumat(request):
         if poistettava:
             pelaaja = poistettava.pelaaja_id
             summa = poistettava.sakko_summa
-            print(pelaaja,summa)
             poistettava.delete()
             sakko_update = Pelaajat.objects.get(pelaaja_nimi=pelaaja)
             sakko_update.saadut_sakot -= summa
             sakko_update.save(update_fields = ["saadut_sakot"])
     
-    kulut = Kulut.objects.all()
+    kulut = Kulut.objects.all().order_by('-kulu_pvm')
     sakot = Sakko.objects.all().order_by('-pvm')
-    maksu = Maksu.objects.all()
+    maksu = Maksu.objects.all().order_by('-pvm')
 
     # Huomioidaan if-lauseella mikäli tietokannassa ei ole tietoja 
     saadut = Pelaajat.objects.aggregate(sum=Sum('saadut_sakot'))
